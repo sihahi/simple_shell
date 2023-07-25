@@ -7,7 +7,7 @@
  * @len: length.
  * Return: ...
  */
-int getlineCus(__attribute__((unused))l_ar *ar,
+int getlineCus(__attribute__((unused))l_ar * ar,
 __attribute__((unused))char **s, __attribute__((unused)) size_t *len)
 {
 	ssize_t t = 0;
