@@ -58,7 +58,7 @@ void deleteCom(char *s)
  * @j: ...
  * @len: ...
 */
-ssize_t treat(l_ar *ar, char *buffer, char **ptr, size_t i, size_t j, size_t len)
+ssize_t treat(l_ar *ar, char *buffer, char **p, size_t i, size_t j, size_t len)
 {
 	char *s;
 
@@ -93,7 +93,7 @@ ssize_t treat(l_ar *ar, char *buffer, char **ptr, size_t i, size_t j, size_t len
 		i = 0;
 		len = 0;
 	}
-	*ptr = s;
+	*p = s;
 	return (_strlen(s));
 }
 /**

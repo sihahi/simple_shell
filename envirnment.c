@@ -20,7 +20,7 @@ int initEnv(l_ar *ar)
 		 * but there is ann issue it doesn't free correctly.
 		 */
 		add_node_end(&env_l, environ[i]);
-    }
+	}
 	ar->env = env_l;
 	return (0);
 }

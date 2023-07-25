@@ -64,10 +64,11 @@ l_s *add_node_end(l_s **head, char *s)
 	n2 = *head;
 	if (s != NULL)
 	{
-		/** 
+		/**
 		 * valgrind memory leak here
-		 * when i free the ar->env once 
-		 * i can't initiliaze it again*/
+		 * when i free the ar->env once
+		 * i can't initiliaze it again
+		 */
 		n1->s = _strdup(s);
 		/* problem flaged above*/
 		if (!n1->s)

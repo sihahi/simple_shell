@@ -19,7 +19,8 @@ char *_strdup(char *s)
 	 *  valgrind error here a should be freed later
 	 */
 	a = malloc((j + 1));
-	/** memory leak error when trying to create memory
+	/** 
+	 * memory leak error when trying to create memory
 	 * of an already freed env
 	 */
 	if (!a)

@@ -120,13 +120,13 @@ void freeAllArgShell(l_ar *ar);
 void freeList(l_s **head);
 void handleSignal(__attribute__((unused))int n);
 void deleteCom(char *s);
-ssize_t treat(l_ar *ar, char *buffer, char **ptr,
-size_t i, size_t j, size_t len);
+ssize_t treat(l_ar *ar, char *buffer, char **p, size_t i, size_t j, size_t len);
 int delimiterExesit(l_ar *ar, char *s, size_t *n);
 
 /* utils07.c*/
 int getlineCus(l_ar *ar, char **s, size_t *len);
 char *_strchr(char *s, char c);
+void printInPath(l_ar *ar);
 
 /* environment.c */
 int initEnv(l_ar *ar);

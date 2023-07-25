@@ -28,26 +28,23 @@ void isInPath(l_ar *ar)
 	if (path)
 	{
 		ar->path = path;
-		_fork(ar); }
+		_fork(ar);
+	}
 	else
 	{
 		if ((ar->file_in <= 2 && isatty(STDIN_FILENO))
 		|| getEnvv(ar, "PATH=") || ar->argv[0][0] == '/')
 		{
-			if (!ar->argv[0] || stat(ar->argv[0], &st))
-				;
-			else
+			if (ar->argv[0] && !stat(ar->argv[0], &st))
+			{
 				if (st.st_mode & S_IFREG)
 					_fork(ar); }
+		}
 		else if (*(ar->arg) != '\n')
 		{
 			ar->st = EXIT_VALUE;
-			_puts(ar->filename);
-			_puts(": ");
-			_printd(STDERR_FILENO, ar->iline);
-			_puts(": ");
-			_puts(ar->argv[0]);
-			_puts(": not found\n"); }}
+			printInPath(ar); }
+	}
 }
 /**
  * _fork - forks to run command
