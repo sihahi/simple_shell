@@ -66,11 +66,8 @@ int prompt(l_ar *ar, char **av)
 		exit(ar->st);
 	if (r == -2)
 	{
-		printf("here\n");
-		printf("%i", ar->nerr);
 		if (ar->nerr != -1)
 		{
-			printf("%i", ar->nerr);
 			exit(ar->nerr);
 		}
 		exit(ar->st);
