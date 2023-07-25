@@ -75,7 +75,7 @@ int prompt(l_ar *ar, char **av)
 	return (r);
 }
 /**
- * checkCom: checks if command builtin or in path.
+ * checkCom - checks if command builtin or in path.
  * @ar: the struct list_ar.
  * @av: the list of arguments in main.
  * Return: ...

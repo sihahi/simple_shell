@@ -34,7 +34,6 @@ int inDlm(char c, char *ds)
 /**
  * changeVal - changes value of special variables.
  * @ar: ...
- * @s: the string input.
  * Return: 1 if replaced, 0 otherwise
  */
 int changeVal(l_ar *ar)

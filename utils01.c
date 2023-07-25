@@ -37,7 +37,7 @@ int _putchar(char c)
 	return (1);
 }
 /**
- *_putse - puts a string in output.
+ *_puts - puts a string in output.
  * @s: the string.
  */
 void _puts(char *s)

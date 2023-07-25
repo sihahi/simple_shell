@@ -66,7 +66,7 @@ int _printd(int fd, int a)
 	return (r);
 }
 /**
- * _atoie - converts a string of to int.
+ * _atoi - converts a string of to int.
  * @s: the input string.
  * Return: the value.
  */
@@ -116,7 +116,7 @@ int _strcmp(char *s1, char *s2)
 	return (a - b);
 }
 /**
- * _strtows - splits a string into words
+ * _strtok - splits a string into words
  * while ignoring the reapeting delimiters.
  * @s: the string.
  * @sd: the string delimeter.

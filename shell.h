@@ -18,10 +18,7 @@
 #define CUSTOM_GETLINE 0
 #define EXIT_VALUE 127
 
-/**
- * using instead of env in main()
- * extern char **environ; is POSIX standard.
-*/
+
 extern char **environ;
 
 /**
@@ -74,7 +71,7 @@ int dif_env;
 int tcmd;
 char **bcmd;
 } l_ar;
-
+/* extern char **environ; is POSIX standard. */
 /* main.c*/
 int fileCom(l_ar *ar, char **av);
 int prompt(l_ar *ar, char **av);
