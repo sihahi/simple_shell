@@ -1,152 +1,81 @@
 #include "shell.h"
 /**
- * isInPath - finds in path the command.
- * @ar: the struct of arg of the shell.
+ * isbuiltin - ...
+ * @token: ...
+ * @e: ...
+ * Return: ...
  */
-void isInPath(l_ar *ar)
+int isbuiltin(char **token, l_u *e)
 {
-	int i, j;
-	char *path = NULL, *s = " \t\n";
-	struct stat st;
-
-	ar->path = ar->argv[0];
-	if (ar->iflag)
-	{
-		ar->iline++;
-		ar->iflag = 0; }
-	for (i = 0, j = 0; ar->arg[i]; i++)
-	{
-		while (*s)
-		{
-			if (*s++ == ar->arg[i])
-				continue;
-			j++; }
-	}
-	if (!j)
-		return;
-	path = getInPath(ar, "PATH=", ar->argv[0]);
-	if (path)
-	{
-		ar->path = path;
-		_fork(ar);
-	}
+	if (token == NULL)
+		return (-1);
+	if (token[0] == NULL)
+		return (-1);
+	if (!_strcmp(token[0], "exit"))
+		_bi_exit(token);
+	else if (!_strcmp(token[0], "env"))
+		_bi_env(e);
+	/**
+	 * else if (!_strcmp(token[0], "setenv"))
+	 * r = _bi_setenv(token[1], token[2]);
+	 * else if (!_strcmp(token[0], "unsetenv"))
+	 * r = _bi_unsetenv(token[1]);
+	 * else if (_strcmp(token[0], "cd") == 0)
+	 * r = _bi_cd(token);
+	 * else if (!_strcmp(token[0], "alias"))
+	 * r = _bi_alias(token);
+	 */
 	else
-	{
-		if ((ar->file_in <= 2 && isatty(STDIN_FILENO))
-		|| getEnvv(ar, "PATH=") || ar->argv[0][0] == '/')
-		{
-			if (ar->argv[0] && !stat(ar->argv[0], &st))
-			{
-				if (st.st_mode & S_IFREG)
-					_fork(ar); }
-		}
-		else if (*(ar->arg) != '\n')
-		{
-			ar->st = EXIT_VALUE;
-			printInPath(ar); }
-	}
+		return (0);
+	return (1);
 }
 /**
- * _fork - forks to run command
- * @ar: the struct of arg of the shell.
+ * isexecute - ...
+ * @tk: ...
+ * @e: ...
+ * Return: ...
  */
-void _fork(l_ar *ar)
+int isexecute(char **tk, l_u *e)
 {
+	char *p = NULL;
+	int st = 0;
 	pid_t child;
 
-	child = fork();
-	if (child == -1)
+	p = isinpath(tk[0], e);
+	if (p)
 	{
-		perror("Error:");
-		return;
-	}
-	if (child != 0)
-	{
-		wait(&(ar->st));
-		if (WIFEXITED(ar->st))
+		child = fork();
+		if (child == -1)
 		{
-			ar->st = WEXITSTATUS(ar->st);
-			if (ar->st == (EXIT_VALUE - 1))
+			_puts("Error:");
+			return (-1);
+		}
+		else if (child == 0)
+		{
+			if (execve(p, tk, NULL) == -1)
 			{
-				_puts(": ");
-				_printd(ar->iline, STDERR_FILENO);
-				_puts(": ");
-				_puts(ar->argv[0]);
-				_puts(": Permission denied\n");
+				_puts("Fork: failed: ");
+				_puts(tk[0]);
+				_putchar('\n');
+				free(p);
+				if (errno == EACCES)
+					exit(126);
+				exit(0);
 			}
+		}
+		else
+		{
+			wait(&st);
+			free(p);
 		}
 	}
 	else
 	{
-		if (ar->dif_env || !ar->envr)
-		{
-			ar->dif_env = 0;
-			ar->envr = getArray(ar->env);
-		}
-		if (execve(ar->path, ar->argv, ar->envr) == -1)
-		{
-			freeAllArgShell(ar);
-			if (errno == EACCES)
-				exit((EXIT_VALUE - 1));
-			exit(1);
-		}
-	}
-}
-/**
- * readLine - gets the line without \n.
- * @ar: the struct of arg of the shell.
- * Return: ...
- */
-ssize_t readLine(l_ar *ar)
-{
-	static size_t i, j, len;
-	size_t lenl;
-	ssize_t r = 0;
-	char **ptr = &(ar->arg);
-	static char *buffer;
-
-	j = i;
-	if (!len)
-	{
-		free(buffer);
-		buffer = NULL;
-		signal(SIGINT, handleSignal);
-		r = _getline(ar, &buffer, &lenl);
-		if (r > 0)
-		{
-			if ((buffer)[r - 1] == '\n')
-			{
-				(buffer)[r - 1] = '\0';
-				r--;
-			}
-			deleteCom(buffer);
-			ar->iflag = 1;
-		}
-	}
-	_putchar(-1);
-	if (r == -1)
+		_puts("Fork: failed: ");
+		_puts(tk[0]);
+		_putchar('\n');
+		free(p);
 		return (-1);
-	if (len)
-		return (treat(ar, buffer, ptr, i, j, len));
-	*ptr = buffer;
-	return (r);
+	}
+	return (0);
 }
-/**
- * _getline - redirects to the convient getline.
- * @ar: the struct of args of shell.
- * @s: ...
- * @len: length.
- * Return: ...
- */
-int _getline(__attribute__((unused))l_ar *ar, char **s, size_t *len)
-{
-	ssize_t r = 0;
-
-#if CUSTOM_GETLINE
-	r = getlineCus(ar, s, len);
-#else
-	r = getline(s, len, stdin);
-#endif
-	return (r);
-}
-

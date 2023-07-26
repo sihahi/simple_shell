@@ -1,113 +1,69 @@
 #include "shell.h"
 /**
- * getLenTok - ...
- * @s: the string.
- * @sd: the string delimeter.
- * Return: length.
+ * _putchar - writes the character c to stdout
+ * @c: The character to print
+ *
+ * Return: On success 1.
+ * On error, -1 is returned, and errno is set appropriately.
  */
-int getLenTok(char *s, char *sd)
+int _putchar(char c)
 {
-	int a, b, c, l = 0;
-
-	for (a = 0; s[a] != '\0'; a++)
-	{
-		b = inDlm(s[a], sd);
-		c = inDlm(s[a + 1], sd);
-		if (!b && (!s[a + 1] || !c))
-			l++;
-	}
-	return (l);
+	return (write(1, &c, 1));
 }
 /**
- * inDlm - checks if delimiter.
- * @c: the input char.
- * @ds: the delimeter string.
- * Return: 0 on success.
+ * _puts -  prints a string, followed by a new line.
+ * @s: string to write
  */
-int inDlm(char c, char *ds)
+void _puts(char *s)
 {
-	while (*ds)
-		if (*ds++ == c)
-			return (0);
-	return (1);
-}
-/**
- * changeVal - changes value of special variables.
- * @ar: ...
- * Return: 1 if replaced, 0 otherwise
- */
-int changeVal(l_ar *ar)
-{
-	int i = 1;
-	l_s *l;
-
-	for (i = 0; ar->argv[i]; i++)
-	{
-		if (ar->argv[i][0] != '$' || !ar->argv[i][1])
-			continue;
-		if (!_strcmp(ar->argv[i], "$$"))
-		{
-			changeStr(&(ar->argv[i]), _strdup(_itoa(getpid(), 10, 0)));
-			continue;
-		}
-		if (!_strcmp(ar->argv[i], "$?"))
-		{
-			changeStr(&(ar->argv[i]), _strdup(_itoa(ar->st, 10, 0)));
-			continue;
-		}
-		l = getNodeOf(ar->env, &ar->argv[i][1], '=');
-		if (l)
-		{
-			changeStr(&(ar->argv[i]), _strdup(getAddressStr(l->s, '=') + 1));
-			continue;
-		}
-		changeStr(&ar->argv[i], _strdup(""));
-	}
-	return (0);
-}
-/**
- * changeStr - changes the value of a string with another.
- * @s1: the old string pointer.
- * @s2: the new string.
- * Return: 1 success, else 0.
- */
-int changeStr(char **s1, char *s2)
-{
-	free(*s1);
-	*s1 = s2;
-	return (1);
-}
-/**
- * _itoa - convertes int to a given baese.
- * @n: the input number.
- * @b: the input base.
- * @f: the appropriate flags.
- * Return: ...
- */
-char *_itoa(long int n, int b, int f)
-{
-	static char *t, buffer[50];
-	char *p, sign = 0;
-	unsigned long num = n;
-
-	if (!(f & 2) && n < 0)
-	{
-		num = -n;
-		sign = '-';
-
-	}
-	if (!(f & 1))
-		t = "0123456789ABCDEF";
+	if (*s == '\0')
+		_putchar('\0');
 	else
-		t = "0123456789abcdef";
-	p = &buffer[(50 - 1)];
-	*p = '\0';
-	do	{
-		*--p = t[num % b];
-		num /= b;
-	} while (num != 0);
+	{
+		_putchar(*s);
+		s++;
+		_puts(s);
+	}
+}
+/**
+ * _strcat - concatenates two strings
+ * @dest: input string t append to
+ * @src: input string to be appended
+ * Return: resulting string
+ */
+char *_strcat(char *dest, char *src)
+{
+	char *r;
 
-	if (sign)
-		*--p = sign;
-	return (p);
+	r = dest;
+	while (*dest)
+		dest++;
+	while (*src)
+		*dest++ = *src++;
+	*dest = '\0';
+	return (r);
+}
+/**
+ * _strcmp - compare two string
+ * @s1: first string
+ * @s2: second string
+ * Return: 0: equal, negative: s1 smaller than s2, positive: bigger
+ */
+int _strcmp(char *s1, char *s2)
+{
+	int i, a = 0, b = 0, l1, l2;
+
+	l1 = _strlen(s1);
+	l2 = _strlen(s2);
+	if (l1 < l2)
+		l1 = l2;
+	for (i = 0; i < l1; i++)
+		if (s1[i] != s2[i])
+		{
+			a = s1[i];
+			b = s2[i];
+			break;
+		}
+
+	return (a - b);
 }

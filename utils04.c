@@ -1,118 +1,131 @@
 #include "shell.h"
 /**
- * getNodeOf - finds node which its s val
- * starts with the given string s.
- * @l: the pointer to head of l_s.
- * @s: tthe string to match.
- * @c: the next character to match.
+ * isinpath - ...
+ * @s: ...
+ * @e: ...
  * Return: ...
  */
-l_s *getNodeOf(l_s *l, char *s, char c)
+char *isinpath(char *s, l_u *e)
 {
-	char *a = NULL;
+	char **tk1, *pval, *r;
+	int i = 0;
 
-	while (l != NULL)
+	r = NULL;
+	if (!access(s, F_OK))
 	{
-		while (*s)
-		{
-			if (*s++ != *l->s++)
-				continue;
-		}
-		a = l->s;
-		if (a && ((c == -1) || (*a == c)))
-			return (l);
-		l = l->next;
+		return (s);
 	}
-	return (NULL);
-}
-/**
- * getAddressStr - gets the adress by locating
- * a char in the input string.
- *@s: the input string.
- *@c: the char to be located.
- *Return: pointer to the location(adress).
- */
-char *getAddressStr(char *s, char c)
-{
-	do {
-		if (*s == c)
-			return (s);
-	} while (*s++ != '\0');
-
-	return (NULL);
-}
-/**
- * getInPath - finds the command in
- * path and gets full path.
- * @ar: the structs of args of shell.
- * @ps: the value of path.
- * @s: the value of command.
- * Return: ...
- */
-char *getInPath(l_ar *ar, char *ps, char *s)
-{
-	int i = 0, a = 0;
-	char *path, *p;
-	struct stat st;
-
-	p =  getEnvv(ar, ps);
-	if (!p)
-		return (NULL);
-	if ((_strlen(s) > 2) && _strbg(s, "./"))
-		if (!(!s || stat(s, &st)))
-			if (st.st_mode & S_IFREG)
-				return (s);
-	while (1)
+	else
 	{
-		if (!p[i] || p[i] == ':')
+		pval = _getenvval("PATH", e);
+		tk1 = _strtok(pval, ":");
+		free(pval);
+		while (tk1[i])
 		{
-			path = pathDup(p, a, i);
-			if (!*path)
-				_strcat(path, s);
-			else
+			r = inpath((tk1[i]), s);
+			if (r)
 			{
-				_strcat(path, "/");
-				_strcat(path, s);
+				return(r);
 			}
-			if (!(!path || stat(path, &st)))
-				if (st.st_mode & S_IFREG)
-					return (path);
-			if (!p[i])
-				break;
-			a = i;
+			i++;
 		}
-		i++;
+		_freetok(tk1);
+	}
+	return (NULL);
+}
+
+char *inpath(char *s1, char *s2)
+{
+	char *r;
+
+	r = (char *)_calloc((_strlen(s1) + _strlen(s2) + 3), 1);
+	/* r = NULL;*/
+	_strcat(r, s1);
+	_strcat(r, "/");
+	_strcat(r, s2);
+	if (!access(r, F_OK))
+	{
+		return (r);
 	}
 	return (NULL);
 }
 /**
- * _strbg - checks if string b starts with a.
- * @a: the string to search.
- * @b: the string to find.
- * Return: pointer to next char or NULL.
+ * add_node - adds a new node at the beginning of a list_t list.
+ * @head: the linked list.
+ * @s1: the string to add.
+ * @s2: ...
+ * Return: the address of the new list.
  */
-char *_strbg(const char *a, const char *b)
+l_u *add_node(l_u **head, char *s1, char *s2)
 {
-	while (*b)
-		if (*b++ != *a++)
+	l_u *l;
+
+	if (head != NULL && s1 != NULL && s2 != NULL)
+	{
+		l = malloc(sizeof(l_u));
+		if (l == NULL)
 			return (NULL);
-	return ((char *)a);
+		l->s1 = s1;
+		l->s2 = s2;
+		l->next = *head;
+		*head = l;
+	}
+	return (*head);
 }
 /**
- * pathDup - duplicates characters of path.
- * @s: the value of path.
- * @a: the starting point.
- * @b: the ending point.
- * Return: ...
+ * _atoi - convert string to int
+ * @s: string to convert
+ * Return: integer
  */
-char *pathDup(char *s, int a, int b)
-{
-	int i = 0, j = 0;
-	static char buffer[BUFFER_SIZE];
 
-	for (j = 0, i = a; i < b; i++)
-		if (s[i] != ':')
-			buffer[j++] = s[i];
-	buffer[j] = 0;
-	return (buffer);
+int _atoi(char *s)
+{
+	int l, m, n;
+	int b = 0;
+
+	l = _strlen(s);
+	n = 1;
+
+	for (m = 0; m < l; m++)
+	{
+		if (s[m] == '-')
+		{
+			n *= -1;
+		}
+		else if (s[m] >= '0' && s[m] <= '9')
+		{
+			if (b != 0)
+			{
+				b *= 10;
+			}
+			b += s[m] - '0';
+		}
+		else if (b != 0)
+		{
+			break;
+		}
+	}
+	return (n * b);
+}
+/**
+ * _calloc -  allocates memory for an array
+ * and sets it to zero, using malloc.
+ * @nmemb: the number of elements.
+ * @size: size of byte.
+ * Return: pointer to the allocated memory.
+ */
+void *_calloc(unsigned int nmemb, unsigned int size)
+{
+	char *p;
+	unsigned int i, a;
+
+	if (nmemb == 0 || size == 0)
+		return (NULL);
+	a = nmemb * size;
+	p = malloc(nmemb * size);
+	if (p == NULL)
+		return (NULL);
+	for (i = 0; i < a; i++)
+		p[i] = 0;
+	return (p);
 }

@@ -1,34 +1,50 @@
 #include "shell.h"
-/**
- * biExit - exits the shell with a status.
- * @ar: the struct of args of shell.
- *  Return: exit status.
- */
-int biExit(l_ar *ar)
-{
-	int r;
 
-	if (ar->argv[1])
+/**
+ * _bi_exit - ...
+ * @tk: ...
+ * Return: ...
+ */
+int _bi_exit(char **tk)
+{
+	int i = 0;
+
+	if (tk[1] == NULL)
 	{
-		r = _atoi(ar->argv[1]);
-		if (r != -1)
-		{
-			/** the number of the exist value is saved*/
-			ar->nerr = r;
-			return (-2);
-		}
-		ar->st = 2;
-		_puts(ar->filename);
-		_puts(": ");
-		_printd(STDERR_FILENO, ar->iline);
-		_puts(": ");
-		_puts(ar->argv[0]);
-		_puts(": Illegal number: ");
-		_puts(ar->argv[1]);
-		_putchar('\n');
-		return (1);
+		_freetok(tk);
+		exit(0);
 	}
-	/** if no exit value is given*/
-	ar->nerr = -1;
-	return (-2);
+	else
+		i = _atoi(tk[1]);
+	if (i < 0)
+	{
+		_puts("exit: Illegal number: ");
+		_puts(tk[1]);
+		_putchar('\n');
+		return (-1);
+	}
+	_freetok(tk);
+	exit(i);
+}
+/**
+ * _bi_env - ...
+ * @e: ...
+ * Return: ...
+ */
+int _bi_env(l_u *e)
+{
+	while (e != NULL)
+	{
+		if (e->s1 != NULL)
+		{
+			_puts(e->s1);
+			_putchar('\n');
+		}
+		else
+		{
+			_putchar('\n');
+		}
+		e = e->next;
+	}
+	return (0);
 }

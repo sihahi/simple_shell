@@ -1,162 +1,147 @@
 #include "shell.h"
 /**
- * _strdup - returns a pointer to a newly allocated
- * space in memory, which contains a copy.
- * of the string given as a parameter.
- * @s: input string.
- * Return: pointer to duplicated string.
+ * _strlen - returns the length of a string
+ * @s: input string
+ * Return: length
  */
-char *_strdup(char *s)
-{
-	int j = 0;
-	char *a;
 
-	if (s == NULL)
-		return (NULL);
-	while (*s++)
-		j++;
-	/**
-	 *  valgrind error here a should be freed later
-	 */
-	a = malloc((j + 1));
-	/**
-	 * memory leak error when trying to create memory
-	 * of an already freed env
-	 */
-	if (!a)
-		return (NULL);
-	for (j++; j--;)
-		a[j] = *--s;
-	return (a);
+int _strlen(char *s)
+{
+	int l = 0;
+
+	while (*s != '\0')
+	{
+		l++;
+		s++;
+	}
+
+	return (l);
 }
 /**
- * _printd - prints a decimal.
- * @fd: the input filed escriptor.
- * @a: the input value.
+ * _strcpy - copy the string
+ * @dest: destination of the string
+ * @src: souece of the string
+ * Return: copied string
+ */
+char *_strcpy(char *dest, char *src)
+{
+	int l, i;
+
+	l = _strlen(src);
+
+	for (i = 0; i <= l; i++)
+	{
+		dest[i] = src[i];
+	}
+	return (dest);
+}
+/**
+ * _getline - ...
+ * @s: ...
+ * @sf: ...
  * Return: ...
  */
-int _printd(int fd, int a)
+ssize_t _getline(char **s, int sf)
 {
-	int i, r = 0;
-	unsigned int n, m;
-	int (*_putchars)(char) = _putchar;
+	ssize_t r, fd = 1, len = BUF_SIZE, i = 0, j = 0, k = 0;
+	static ssize_t counter;
+	char *buffer;
 
-	if (fd == STDERR_FILENO)
-		_putchars = _putchar;
-	if (a < 0)
+	counter = checkcounter(counter);
+	if (counter == -1)
+		return (-1);
+	/* buffer = malloc(sizeof(char) * (len + 1));*/
+	buffer = (char *)_calloc((len + 1), sizeof(char));
+	if (buffer == NULL)
+		return (-1);
+	while (j == 0 && k == 0)
 	{
-		n = -a;
-		_putchars('-');
-		r++;
-	}
-	else
-		n = a;
-	m = n;
-	for (i = 1000000000; i > 1; i /= 10)
-	{
-		if (n / i)
+		fd = read(sf, buffer, len);
+		if (fd == -1)
 		{
-			_putchars('0' + m / i);
-			r++;
-		}
-		m %= i;
-	}
-	_putchars('0' + m);
-	r++;
-	return (r);
-}
-/**
- * _atoi - converts a string of to int.
- * @s: the input string.
- * Return: the value.
- */
-int _atoi(char *s)
-{
-	int i = 0;
-	unsigned long int r = 0;
-
-	if (*s == '+')
-		s++;
-	for (i = 0;  s[i] != '\0'; i++)
-	{
-		if (s[i] >= '0' && s[i] <= '9')
+			free(buffer);
+			return (-1); }
+		if (counter == 0 && fd == 0)
+			return (0);
+		if (counter == 0 && fd != 0)
+			counter += fd;
+		if (counter != 0 && fd == 0)
 		{
-			r *= 10;
-			r += (s[i] - '0');
-			if (r > INT_MAX)
-				return (-1);
-		}
-		else
+			counter++;
+			j = 1; }
+		while (buffer[i] != '\0')
+		{
+			if (buffer[i] == '\n')
+				k = 1;
+			i++; }
+	}
+	if (counter > len)
+		buffer = _realloc(buffer, len + 1, counter + 1);
+	buffer[counter] = '\0';
+	if (*s == NULL)
+	{
+		*s = (char *)_calloc((counter + 1), sizeof(char));
+		if (*s == NULL)
 			return (-1);
 	}
+	_strcpy(*s, buffer);
+	free(buffer);
+	r = counter;
+	counter = 0;
 	return (r);
 }
-/**
- * _strcmp - compares two string.
- * @s1: first string.
- * @s2: second string.
- * Return: 0: equal, negative: s1 smaller than s2
- * positive: bigger
- */
-int _strcmp(char *s1, char *s2)
-{
-	int i, a = 0, b = 0, l1, l2;
 
-	l1 = _strlen(s1);
-	l2 = _strlen(s2);
-	if (l1 < l2)
-		l1 = l2;
-	for (i = 0; i < l1; i++)
-		if (s1[i] != s2[i])
-		{
-			a = s1[i];
-			b = s2[i];
-			break;
-		}
-	return (a - b);
-}
 /**
- * _strtok - splits a string into words
- * while ignoring the reapeting delimiters.
- * @s: the string.
- * @sd: the string delimeter.
- * Return: a pointer , or NULL if it fails.
+ * _realloc - reallocates a memory block using malloc and free.
+ * @ptr: pointer to the memory previously allocated.
+ * @old_size: size of space of ptr.
+ * @new_size: new size of the new memory.
+ * Return: pointer.
  */
 
-char **_strtok(char *s, char *sd)
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 {
-	char **r;
-	int a, b, c, d, e;
+	unsigned int i;
+	void *p;
 
-	if (s == NULL || s[0] == 0)
-		return (NULL);
-	if (sd == 0)
-		sd = " ";
-	e = getLenTok(s, sd);
-	if (e == 0)
-		return (NULL);
-	r = malloc(sizeof(char *) * (e + 1));
-	if (r == NULL)
-		return (NULL);
-	for (a = 0, b = 0; b < e; b++)
+	if (new_size == 0 && ptr != NULL)
 	{
-		c = 0;
-		while (inDlm(s[a], sd))
-			a++;
-		while (!inDlm(s[a + c], sd) && s[a + c])
-			c++;
-		r[b] = malloc(sizeof(char) * (c + 1));
-		if (r[b] == NULL)
-		{
-			for (c = 0; c < b; c++)
-				free(r[c]);
-			free(r);
-			return (NULL);
-		}
-		for (d = 0; d < c; d++)
-			r[b][d] = s[a++];
-		r[b][d] = 0;
+		free(ptr);
+		return (NULL);
 	}
-	r[b] = NULL;
-	return (r);
+	if (ptr == NULL)
+	{
+		/* ptr = malloc(new_size);*/
+		ptr = (char *)_calloc(new_size, sizeof(char));
+		if (ptr == NULL)
+			return (NULL);
+		return (ptr);
+	}
+	if (new_size == old_size)
+		return (ptr);
+	if (new_size > old_size)
+	{
+		i = 0;
+		/*p = malloc(new_size);*/
+		p = (char *)_calloc(new_size, sizeof(char));
+		if (p == NULL)
+			return (NULL);
+		while (i < old_size)
+		{
+			((char *)p)[i] = ((char *)ptr)[i];
+			i++;
+		}
+		free(ptr);
+		return (p); }
+	/* p = malloc(new_size);*/
+	p = (char *)_calloc(new_size, sizeof(char));
+	if (p == NULL)
+		return (NULL);
+	while (i < new_size)
+	{
+		((char *)p)[i] = ((char *)ptr)[i];
+		i++;
+	}
+	free(ptr);
+	return (p);
 }
