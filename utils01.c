@@ -13,11 +13,11 @@ void _handler_ctrlc(int n)
 }
 /**
  * pnewline - ...
- * @command: ...
+ * @s: ...
  */
-void pnewline(char *command)
+void pnewline(char *s)
 {
-	free(command);
+	free(s);
 	if (isatty(STDIN_FILENO))
 	{
 		write(STDOUT_FILENO, "\n", 1);

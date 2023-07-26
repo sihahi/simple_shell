@@ -36,7 +36,7 @@ void i_mode(l_u *e);
 /* void n_i_mode(char **argv, l_u *e);*/
 /*-----------utils01.c-----------*/
 void _handler_ctrlc(int n);
-void pnewline(char *command);
+void pnewline(char *s);
 char *dnewline(char *s);
 ssize_t checkcounter(ssize_t c);
 
