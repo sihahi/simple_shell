@@ -33,9 +33,8 @@ int isbuiltin(char **token, l_u *e)
  * isexecute - ...
  * @tk: ...
  * @e: ...
- * Return: ...
  */
-int isexecute(char **tk, l_u *e)
+void isexecute(char **tk, l_u *e)
 {
 	char *p = NULL;
 	int st = 0;
@@ -46,10 +45,7 @@ int isexecute(char **tk, l_u *e)
 	{
 		child = fork();
 		if (child == -1)
-		{
 			_puts("Error:");
-			return (-1);
-		}
 		else if (child == 0)
 		{
 			if (execve(p, tk, NULL) == -1)
@@ -58,24 +54,17 @@ int isexecute(char **tk, l_u *e)
 				_puts(tk[0]);
 				_putchar('\n');
 				free(p);
+				_freetok(tk);
+				free(tk);
 				if (errno == EACCES)
+				{
 					exit(126);
+				}
 				exit(0);
 			}
 		}
 		else
-		{
 			wait(&st);
-			free(p);
-		}
 	}
-	else
-	{
-		_puts("Fork: failed: ");
-		_puts(tk[0]);
-		_putchar('\n');
-		free(p);
-		return (-1);
-	}
-	return (0);
+	free(p);
 }

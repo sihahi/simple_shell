@@ -67,7 +67,7 @@ int inDlm(char c, char *ds);
 
 /*-----------command.c-----------*/
 int isbuiltin(char **token, l_u *e);
-int isexecute(char **tk, l_u *e);
+void isexecute(char **tk, l_u *e);
 
 /*-----------environment.c-----------*/
 l_u *_getenv(char **env);

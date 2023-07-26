@@ -39,9 +39,11 @@ void i_mode(l_u *e)
 		tk = _strtok(line, " ");
 		r = isbuiltin(tk, e);
 		if (r != 1)
+		{
 			isexecute(tk, e);
+		}
+		free(line);
+		_freetok(tk);
 	}
-	free(line);
-	_freetok(tk);
 	free(tk);
 }
