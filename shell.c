@@ -29,7 +29,6 @@ void i_mode(l_u *e)
 		if (fd == -1 || fd == 0)
 		{
 			pnewline(line);
-			free(line);
 			_freetok(tk);
 			exit(fd); }
 		if (line[0] == '\0')
@@ -41,8 +40,10 @@ void i_mode(l_u *e)
 		tk = _strtok(line, " ");
 		r = isbuiltin(tk, e);
 		free(line);
-		if (r != 1)
-			isexecute(tk, e);
-		_freetok(tk); }
+		if (r == 1)
+		{
+			_freetok(tk);
+			continue; }
+		isexecute(tk, e); }
 	free(tk);
 }

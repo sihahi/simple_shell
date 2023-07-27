@@ -57,8 +57,7 @@ void freel(l_u *head)
 	{
 		l = head;
 		head = head->next;
-		free(l->s1);
-		free(l->s2);
+		/*free(l->s1);*/
 		free(l);
 	}
 }

@@ -57,7 +57,7 @@ void _freetok(char **tk)
 
 	if (!tk)
 		return;
-	while (*tk)
+	while(*tk)
 		free(*tk++);
 	free(s);
 }

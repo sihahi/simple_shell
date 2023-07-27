@@ -63,4 +63,5 @@ void isexecute(char **tk, l_u *e)
 			wait(&st);
 	}
 	free(p);
+	_freetok(tk);
 }
