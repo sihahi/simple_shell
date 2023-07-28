@@ -55,8 +55,22 @@ char *_strncpy(char *, char *, int);
 char *_strncat(char *, char *, int);
 char *_strchr(char*, char);
 
-/*string_functions4.c */
+/* string_functions4.c */
 char **strtow(char *);
+
+/* memory_functions.c */
+char *_memset(char *s, char b, unsigned int n);
+void ffree(char **pp);
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+
+/* memory_functions2.c */
+int bfree(void **ptr);
+
+/* more_functions.c */
+int _atoi(char *s);
+int is_delim(char c, char *delim);
+int interactive(info_t *info);
+int _isalpha(int c)
 
 #endif
 =======
