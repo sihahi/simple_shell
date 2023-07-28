@@ -53,7 +53,7 @@ void set_info(info_t *info, char **av)
 void free_info(info_t *info, int all)
 {
 	ffree(info->argv);
-	info->argv = null;
+	info->argv = NULL;
 	info->path = NULL;
 	if (all)
 	{

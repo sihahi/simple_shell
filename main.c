@@ -7,7 +7,7 @@
  * Return : 0 success, 1 error
  */
 
-int main(int ac, int **av)
+int main(int ac, char **av)
 {
 	info_t info[] = { INFO_INIT };
 	int fd = 2;
