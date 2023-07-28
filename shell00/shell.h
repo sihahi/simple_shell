@@ -63,6 +63,7 @@ void *_calloc(unsigned int nmemb, unsigned int size);
 
 /*-----------utils05.c-----------*/
 l_u *add_nod(l_u **head, char *s1, char *s2);
+ssize_t _getlinev2(char **s, int sf);
 
 /*-----------token.c-----------*/
 char **_strtok(char *s, char *sd);
