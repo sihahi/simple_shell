@@ -25,7 +25,7 @@ void i_mode(l_u *e)
 		fd = getline(&line, &len, stdin);
 #else
 		/*fd = _getline(&line, STDOUT_FILENO);*/
-		fd = _getline(&line, STDOUT_FILENO);
+		fd = _getlinev2(&line, STDOUT_FILENO);
 #endif
 		exitnewline( tk, e, line, fd);
 		if (line[0] == '\0')

@@ -34,10 +34,10 @@ void exitnewline(char **tk, l_u *e, char *s, ssize_t fd)
 {
 	if (fd == -1 || fd == 0)
 	{
-		pnewline(s);
 		if (tk)
 			_freetok(tk);
 		freel(e);
+		pnewline(s);
 		exit(fd);
 	}
 }
