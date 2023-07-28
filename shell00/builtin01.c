@@ -3,14 +3,16 @@
 /**
  * _bi_exit - ...
  * @tk: ...
+ * @e: ...
  * Return: ...
  */
-int _bi_exit(char **tk)
+int _bi_exit(char **tk, l_u *e)
 {
 	int i = 0;
 
 	if (tk[1] == NULL)
 	{
+		freel(e);
 		_freetok(tk);
 		exit(0);
 	}
@@ -23,6 +25,7 @@ int _bi_exit(char **tk)
 		_putchar('\n');
 		return (-1);
 	}
+	freel(e);
 	_freetok(tk);
 	exit(i);
 }

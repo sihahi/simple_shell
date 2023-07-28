@@ -10,10 +10,11 @@ l_u *_getenv(char **env)
 	l_u *linked;
 	char *s2;
 
+	linked = NULL;
 	s2 = " ";
 	while (env[i])
 	{
-		add_node(&linked, env[i], s2);
+		add_nod(&linked, env[i], s2);
 		i++;
 	}
 	return (linked);
