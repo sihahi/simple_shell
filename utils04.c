@@ -12,11 +12,7 @@ char *isinpath(char *s, l_u *e)
 
 	r = NULL;
 	tk1 = NULL;
-	if (!access(s, F_OK))
-	{
-		return (s);
-	}
-	else
+	if (access(s, F_OK))
 	{
 		pval = _getenvval("PATH", e);
 		tk1 = _strtok(pval, ":");

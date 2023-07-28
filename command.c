@@ -39,10 +39,15 @@ int isbuiltin(char **token, l_u *e)
 void isexecute(char **tk, l_u *e)
 {
 	char *p = NULL;
-	int st = 0;
+	int st = 0, ex = 1;
 	pid_t child;
 
-	p = isinpath(tk[0], e);
+	if (!access(tk[0], F_OK))
+	{
+		ex = 0;
+		p = tk[0]; }
+	else
+		p = isinpath(tk[0], e);
 	if (p)
 	{
 		child = fork();
@@ -58,17 +63,19 @@ void isexecute(char **tk, l_u *e)
 				free(tk);
 				if (errno == EACCES)
 					exit(126);
-				exit(0);
-			}
+				exit(0); }
 		}
 		else
+		{
 			wait(&st);
+			_freetok(tk);
+			if (ex == 1)
+				free(p);
+		}
 	}
 	else
 	{
 		write(STDOUT_FILENO, tk[0], _strlen(tk[0]));
 		perror(": failed");
 	}
-	free(p);
-	_freetok(tk);
 }
