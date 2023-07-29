@@ -24,8 +24,8 @@ void i_mode(l_u *e)
 #if CUSTOM_GETLINE
 		fd = getline(&line, &len, stdin);
 #else
-		/*fd = _getline(&line, STDOUT_FILENO);*/
-		fd = _getlinev2(&line, STDOUT_FILENO);
+		/*fd = _getline(&line, STDIN_FILENO);*/
+		fd = _getlinev2(&line, STDIN_FILENO);
 #endif
 		exitnewline(tk, e, line, fd);
 		if (line[0] == '\0' || line[0] == '\n')
@@ -45,4 +45,22 @@ void i_mode(l_u *e)
 			continue; }
 		isexecute(tk, e); }
 	free(tk);
+}
+/**
+ * n_i_mode - ...
+ * @e: ...
+ */
+void n_i_mode(l_u *e)
+{
+	char *line;
+	ssize_t len = 0;
+
+	(void) e;
+	len = _getlinev2(&line, STDIN_FILENO);
+	if (!len)
+	{
+		free(line);
+		exit(0);
+	}
+
 }

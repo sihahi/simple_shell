@@ -33,6 +33,8 @@ typedef struct list_u
 
 /*-----------shell.c-----------*/
 void i_mode(l_u *e);
+void n_i_mode(l_u *e);
+
 /* void n_i_mode(char **argv, l_u *e);*/
 /*-----------utils01.c-----------*/
 void _handler_ctrlc(int n);
