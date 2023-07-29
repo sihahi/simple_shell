@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include <errno.h>
 #define BUF_SIZE 1024
-#define CUSTOM_GETLINE 0
+#define CUSTOM_GETLINE 1
 extern char **environ;
 /**
  * struct list_u - linked list.
@@ -33,7 +33,7 @@ typedef struct list_u
 
 /*-----------shell.c-----------*/
 void i_mode(l_u *e);
-void n_i_mode(l_u *e);
+char *nocomment(char *s);
 
 /* void n_i_mode(char **argv, l_u *e);*/
 /*-----------utils01.c-----------*/
@@ -67,6 +67,7 @@ void *_calloc(unsigned int nmemb, unsigned int size);
 l_u *add_nod(l_u **head, char *s1, char *s2);
 ssize_t _getlinev2(char **s, int sf);
 char *_strdup(char *s);
+char *comb(char *b, char *s);
 
 /*-----------token.c-----------*/
 char **_strtok(char *s, char *sd);
@@ -89,5 +90,7 @@ int _getidxenv(char *s, l_u *e);
 int _bi_exit(char **tk, l_u *e);
 int _bi_env(l_u *e);
 int _bi_cd(char **tk, l_u *e);
+int cdex(char *a, char *b, char *s, l_u *e);
+char *cddir(char *b, char *s);
 
 #endif

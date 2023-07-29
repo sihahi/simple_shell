@@ -60,7 +60,7 @@ int _bi_env(l_u *e)
 int _bi_cd(char **tk, l_u *e)
 {
 	int r = 0;
-	char *c = NULL, *a = NULL;
+	char *c = NULL, *a = NULL, *b = NULL;
 
 	a = getcwd(a, 0);
 	if (!tk[1])
@@ -76,5 +76,73 @@ int _bi_cd(char **tk, l_u *e)
 		_setenv("PWD", a, &e);
 		free(a);
 	}
+	else
+	{
+		if (tk[1][0] == '-')
+		{
+			if (tk[1][1] == '\0')
+				b = _getenvval("OLDPWD", e);
+		}
+		else if (tk[1][0] == '~')
+		{
+			b = _getenvval("HOME", e);
+			b = comb(b, tk[1]);
+		}
+		else
+			b = cddir(b, tk[1]);
+		r = cdex(a, b, tk[1], e);
+		free(b);
+	}
 	return (r);
+}
+
+/**
+ * cdex - ...
+ * @a: ...
+ * @b: ...
+ * @s: ...
+ * @e: ...
+ * Return: ...
+ */
+int cdex(char *a, char *b, char *s, l_u *e)
+{
+	int r = 0;
+
+	if (access(b, F_OK))
+	{
+		r = 2;
+		puts("cd: can't access drictrory: ");
+		puts(s);
+		puts("\n");
+		free(a);
+	}
+	else
+	{
+		_setenv("OLDPWD", a, &e);
+		free(a);
+		a = NULL;
+		chdir(b);
+		a = getcwd(a, 0);
+		_setenv("PWD", a, &e);
+		free(a);
+	}
+	return (r);
+}
+/**
+ * cddir - ...
+ * @b: ...
+ * @s: ...
+ * Return: ...
+ */
+char *cddir(char *b, char *s)
+{
+	if (s[0] != '/')
+	{
+		b = getcwd(b, 0);
+		b = _strcat(b, "/");
+		b = _strcat(b, s);
+	}
+	else
+		b = _strdup(s);
+	return (b);
 }

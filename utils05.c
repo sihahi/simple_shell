@@ -101,3 +101,23 @@ char *_strdup(char *s)
 	a[i] = '\0';
 	return (a);
 }
+/**
+ * comb - ...
+ * @b: ...
+ * @s: ...
+ * Return: ...
+ */
+char *comb(char *b, char *s)
+{
+	int i = 1, l1 = 0, l2 = 0;
+
+	while (b[l1])
+		l1++;
+	while (s[l2] != '\0')
+		l2++;
+	b = _realloc(b, l1, l1 + l2 + 1);
+	while (s[i])
+		b[l1++] = s[i++];
+	b[l1] = '\0';
+	return (b);
+}

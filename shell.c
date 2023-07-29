@@ -22,9 +22,6 @@ void i_mode(l_u *e)
 			write(STDOUT_FILENO, "$ ", 2);
 		signal(SIGINT, _handler_ctrlc);
 #if CUSTOM_GETLINE
-		fd = getline(&line, &len, stdin);
-#else
-		/*fd = _getline(&line, STDIN_FILENO);*/
 		fd = _getlinev2(&line, STDIN_FILENO);
 #endif
 		exitnewline(tk, e, line, fd);
@@ -33,8 +30,8 @@ void i_mode(l_u *e)
 			free(line);
 			_freetok(tk);
 			continue; }
-
 		line = dnewline(line);
+		line = nocomment(line);
 		tk = _strtok(line, " ");
 		if (line)
 			free(line);
@@ -47,20 +44,22 @@ void i_mode(l_u *e)
 	free(tk);
 }
 /**
- * n_i_mode - ...
- * @e: ...
+ * nocomment - ...
+ * @s: ...
+ * Return: ...
  */
-void n_i_mode(l_u *e)
+char *nocomment(char *s)
 {
-	char *line;
-	ssize_t len = 0;
+	int i = 0;
 
-	(void) e;
-	len = _getlinev2(&line, STDIN_FILENO);
-	if (!len)
+	while (s[i])
 	{
-		free(line);
-		exit(0);
+		if (s[i] == '#' && (s[i - 1] == ' ' || !i))
+		{
+			s[i] = '\0';
+			break;
+		}
+		i++;
 	}
-
+	return (s);
 }
