@@ -55,7 +55,7 @@ void isexecute(char **tk, l_u *e)
 			perror("Fork: failed");
 		else if (child == 0)
 		{
-			if (execve(p, tk, NULL) == -1)
+			if (execve(p, tk, environ) == -1)
 			{
 				perror("Fork : failed");
 				free(p);
